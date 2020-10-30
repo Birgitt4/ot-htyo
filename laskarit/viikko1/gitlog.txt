@@ -1,0 +1,114 @@
+commit 988be593367620d952eedaf448d071f85a8a375d
+Author: Birgitta <birgitta.kaplas@kolumbus.fi>
+Date:   Fri Oct 30 17:08:00 2020 +0200
+
+    lopullinen tilanne
+
+ tiedostoja/file2             | 0
+ tiedostoja/{file1 => file22} | 0
+ tiedostoja/file3             | 2 +-
+ 3 files changed, 1 insertion(+), 1 deletion(-)
+
+commit 48ab8e78522d205c37b45b54bd8e7f8b62a8e69c
+Author: Birgitta <birgitta.kaplas@kolumbus.fi>
+Date:   Fri Oct 30 17:01:39 2020 +0200
+
+    kolmoseen muutosta
+
+ tiedostoja/file3 | 1 +
+ 1 file changed, 1 insertion(+)
+
+commit 02b9fb630efd82122ee171ced9ea313f3cf4d7fe
+Author: Birgitta <birgitta.kaplas@kolumbus.fi>
+Date:   Fri Oct 30 16:57:44 2020 +0200
+
+    tiedostoja kansio tehty ja lisätty kolme tiedostoa
+
+ tiedostoja/file1 | 0
+ tiedostoja/file2 | 0
+ tiedostoja/file3 | 0
+ 3 files changed, 0 insertions(+), 0 deletions(-)
+
+commit 7b1f0de8598dfd6d98e4641b2ee6f5126b7a392e
+Author: Birgitta <birgitta.kaplas@kolumbus.fi>
+Date:   Thu Oct 29 13:45:40 2020 +0200
+
+    ekaan ja kolmanteen muuroksia
+
+ eka.txt    | 3 +--
+ kolmas.txt | 2 +-
+ 2 files changed, 2 insertions(+), 3 deletions(-)
+
+commit 636c9e91938059e38cf1d6ad493b27eaa4071df9
+Author: Birgitta <birgitta.kaplas@kolumbus.fi>
+Date:   Thu Oct 29 13:41:48 2020 +0200
+
+    tiedosto nimi muutettu
+
+ tiedosto.txt => eka.txt | 0
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+
+commit 1305cd87ff628d430e06042561102a5041fe7f39
+Author: Birgitta <birgitta.kaplas@kolumbus.fi>
+Date:   Thu Oct 29 13:38:45 2020 +0200
+
+    toinen poistettu
+
+ toinen.txt | 1 -
+ 1 file changed, 1 deletion(-)
+
+commit 6bfab7d750ea3a1dcc7b471ae8e37be07b326590
+Author: Birgitta <birgitta.kaplas@kolumbus.fi>
+Date:   Thu Oct 29 13:30:53 2020 +0200
+
+    tiedostosta poistettu tekstiä
+
+ tiedosto.txt | 7 -------
+ 1 file changed, 7 deletions(-)
+
+commit 695b9156d8371d61b43220d222195b7d90543199
+Author: Birgitta <birgitta.kaplas@kolumbus.fi>
+Date:   Thu Oct 29 11:57:47 2020 +0200
+
+    tiedostoon kopioitu tekstiä
+
+ tiedosto.txt | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
+
+commit 3b6fe9f64bf3c078d2df5996effe9f25a898331b
+Author: Birgitta <birgitta.kaplas@kolumbus.fi>
+Date:   Wed Oct 28 18:30:32 2020 +0200
+
+    Muokkauksia toiseen ja kolmanteen
+
+ kolmas.txt | 1 +
+ toinen.txt | 1 +
+ 2 files changed, 2 insertions(+)
+
+commit ea276f9648547936edfcab037504bf5910ce5b63
+Author: Birgitta <birgitta.kaplas@kolumbus.fi>
+Date:   Wed Oct 28 18:28:38 2020 +0200
+
+    Kolmannen lisäys
+
+ kolmas.txt | 0
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+
+commit e9aabe695d0d1da17739c150a7543d02068da6cb
+Author: Birgitta <birgitta.kaplas@kolumbus.fi>
+Date:   Wed Oct 28 18:17:00 2020 +0200
+
+    muutos ja lisäys
+
+ tiedosto.txt | 2 ++
+ toinen.txt   | 0
+ 2 files changed, 2 insertions(+)
+
+commit 6225bd31ced5418c99ccf91265a3e0a68f6b9ba9
+Author: Birgitta <birgitta.kaplas@kolumbus.fi>
+Date:   Wed Oct 28 18:13:20 2020 +0200
+
+    tiedosto.txt luotu
+
+ tiedosto.txt | 0
+ 1 file changed, 0 insertions(+), 0 deletions(-)
