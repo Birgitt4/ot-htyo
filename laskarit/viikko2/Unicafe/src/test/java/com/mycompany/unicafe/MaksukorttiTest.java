@@ -26,6 +26,9 @@ public class MaksukorttiTest {
         kortti.lataaRahaa(20);
         assertEquals(30, kortti.saldo());
     }
+    //tostring metodi ei toimi koska kun 10 sentistä otetaan neljä meille
+    //jää 60 senttiä. Tein kuitenkin niin että testi toimisi
+    //voisi kyllä käyttää kortti.saldo tyyliä kuten yllä
     @Test
     public void saldoVaheneeKunRahaRiittaa() {
         kortti.otaRahaa(4);
