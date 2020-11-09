@@ -7,7 +7,7 @@ Ohjelmistotekniikka syksy 2020 harjoitustyö.
 
 [komentorivi.txt](https://github.com/Birgitt4/ot-htyo/blob/master/laskarit/viikko1/komentorivi.txt)
 
-[viikko2]()
+[viikko2](https://github.com/Birgitt4/ot-htyo/tree/master/laskarit/viikko2)
 
 
 ## Dokumentaatio
