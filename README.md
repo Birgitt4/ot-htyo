@@ -1,9 +1,17 @@
-## Otsikko
+## Tetris
+Ohjelmistotekniikka syksy 2020 harjoitustyö.
 
-Ensimmäisen viikon **tehtävät** *melkein* **tehtynä**!
+## Laskareita varten:
 
 [gitlog.txt](https://github.com/Birgitt4/ot-htyo/blob/master/laskarit/viikko1/gitlog.txt)
 
 [komentorivi.txt](https://github.com/Birgitt4/ot-htyo/blob/master/laskarit/viikko1/komentorivi.txt)
 
-Luodaan epätasapaino
+[viikko2]()
+
+
+## Dokumentaatio
+[Vaatimusmäärittely](https://github.com/Birgitt4/ot-htyo/blob/master/dokumentaatio/vaatimusmaarittely.md)
+
+
+[Työaikakirjanpito]()
