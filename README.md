@@ -14,4 +14,4 @@ Ohjelmistotekniikka syksy 2020 harjoitustyö.
 [Vaatimusmäärittely](https://github.com/Birgitt4/ot-htyo/blob/master/dokumentaatio/vaatimusmaarittely.md)
 
 
-[Työaikakirjanpito]()
+[Työaikakirjanpito](https://github.com/Birgitt4/ot-htyo/blob/master/dokumentaatio/tyoaikakirjanpito.md)
