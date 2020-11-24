@@ -6,13 +6,19 @@
 package ohjelmistotekniikka.ui;
 
 
-//import javafx.application.Application;
+import javafx.application.Application;
+import javafx.stage.Stage;
 
 /**
  *
  * @author birgi
  */
 //extends Application import javafx.application.Application; ei toimi
-public class TetrisUi {
+public class TetrisUi extends Application {
+    
+    @Override
+    public void start(Stage s) {
+        
+    } 
     
 }
