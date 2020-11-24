@@ -54,12 +54,7 @@ public class TetrisTest {
         
     }
     
-    @Test
-    public void removePieceRemoves() {
-        int[][] temp = game2.getCurrentShape().getPlaceOnBoard();
-        game2.removePiece(temp);
-        assertEquals(game.toString(), game2.toString());
-    }
+
     
     @Test
     public void MovingRightMovesEverythingOneToTheRight() {
@@ -69,7 +64,7 @@ public class TetrisTest {
                 temp[i][j] = game2.getGame()[i][j-1];
             }
         }
-        game2.move('r');
+        game2.moveRight();
         game.setGame(temp);
         assertEquals(game.toString(), game2.toString());
     }
@@ -81,7 +76,7 @@ public class TetrisTest {
                 temp[i][j] = game2.getGame()[i][j+1];
             }
         }
-        game2.move('l');
+        game2.moveLeft();
         game.setGame(temp);
         assertEquals(game.toString(), game2.toString());
     }
@@ -93,7 +88,7 @@ public class TetrisTest {
                 temp[i][j] = game2.getGame()[i-1][j];
             }
         }
-        game2.move('d');
+        game2.moveDown();
         game.setGame(temp);
         assertEquals(game.toString(), game2.toString());
     }

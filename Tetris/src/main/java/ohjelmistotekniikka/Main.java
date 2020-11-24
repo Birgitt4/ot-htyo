@@ -14,42 +14,62 @@ import ohjelmistotekniikka.ui.TetrisUi;
  */
 public class Main {
     public static void main(String[] args) {
+        
+        //TetrisUi.main(args);
+        
         Tetris tetris = new Tetris();
-        int[][] peli = tetris.getGame();
         tetris.createShape();
         
-        tulostus(peli);
-        
-        tetris.rotateRight();
-        
-        tulostus(peli);
-        
-        tetris.rotateLeft();
-        tulostus(peli);
+        tulostus(tetris.getGame());
+//        
+//        tetris.rotateRight();
+//        
+//        tulostus(peli);
+//        
+//        tetris.rotateLeft();
+//        tulostus(peli);
 
+        for (int i=0; i<4; i++) {
+            tetris.moveRight();
+        }
+        tulostus(tetris.getGame());
+        tetris.moveRight();
+        tulostus(tetris.getGame());
         for (int i=0; i<16; i++) {
-            tetris.move('r');
+            tetris.moveRight();
         }
 
-        tulostus(peli);
+        tulostus(tetris.getGame());
         
-        tetris.move('l');
+        tetris.moveLeft();
         for (int i=0; i<20; i++) {
-            tetris.move('d');
+            tetris.moveDown();
         }
         
-        tulostus(peli);
+        tulostus(tetris.getGame());
         
         
         tetris.createShape();
         
-        tulostus(peli);
+        tulostus(tetris.getGame());
         
         for (int i=0; i<20; i++) {
-            tetris.move('d');
+            tetris.moveDown();
         }
         
-        tulostus(peli);
+        tulostus(tetris.getGame());
+        
+        
+        tetris.createShape();
+        tulostus(tetris.getGame());
+        for (int i=0; i<10; i++) {
+            tetris.moveRight();
+        }
+        for (int i=0; i<16; i++) {
+            tetris.moveDown();
+        }
+        
+        tulostus(tetris.getGame());
     }
     
     public static void tulostus(int[][] peli) {
