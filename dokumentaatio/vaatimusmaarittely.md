@@ -8,7 +8,7 @@ Legendaarinen Tetris tuo tylsien koti-iltojen pelastaja. Pelissä tetrominoista 
 * Käyttäjä voi tarkastella omia pistetilastojaan
 * Mahdolliset vaikeammat tasot?
 #### Pelissä:
-* Tetromino palikoita pystyy kiertämään ja liikuttamaan sivulta sivulle käyttäjän toimesta
+* Tetromino palikoita pystyy kiertämään ja liikuttamaan sivulta sivulle käyttäjän toimesta 
 * Palikat putoaa ylhäältä alas automaattisesti niin pitkälle kuin palikka pystyää putoamaan
 * Käyttäjä voi halutessaan nopeuttaa putoamista
 * Pelissä on pisteenlasku, joka näkyy käyttäjälle. (Pisteiden tuloperusteet!)
