@@ -5,6 +5,7 @@
  */
 package ohjelmistotekniikka.domain;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 /**
@@ -45,11 +46,13 @@ public class Tetris {
     public int[][] getGame() {
         return game;
     }
+    public void setPlace(int[][] place) {
+        this.place = place;
+    }
     public Shape getCurrentShape() {
         return currentShape;
     }
 
-    
     /**
      * Creates a new piece for tetris and puts it on the top of the gameboard.
      */
@@ -60,11 +63,13 @@ public class Tetris {
         down = 0;
         side = 4;
         updatePlace();
-        
+        if (!validMove()) {
+            //game over ei saa enää paloja lisättyä.
+        }
     }
 
     /**
-     * places tetris piece on the fakeboard.
+     * places tetris piece on the board.
      */
     public void putPiece() {
         for (int i = 0; i < 4; i++) {
@@ -73,8 +78,7 @@ public class Tetris {
     }
     
     /**
-     * removes a piece from the fakeboard. Replaces values with zero, where the
-     * piece is removed.
+     * removes a piece from the board.
      */
     public void removePiece() {
         for (int i = 0; i < 4; i++) {
@@ -84,8 +88,7 @@ public class Tetris {
     
     /**
      * When moving or rotating the piece you have to update it on the gameboard
-     * also, this does that to the fakeboard. Then you have to check for
-     * collision.
+     * also, this does that to the board.
      */
     public void updatePlace() {
         place = new int[4][2];
@@ -98,6 +101,60 @@ public class Tetris {
         currentShape.setPlaceOnBoard(place);
         putPiece();
     }
+    
+    /**
+     * Checks lines where new piece has just landed.
+     * @return array that tells rows that are full.
+     */
+    public ArrayList<Integer> lineScan() {
+        ArrayList<Integer> fullrows = new ArrayList<Integer>();
+        for (int i = 0; i < 4; i++) {
+            boolean full = true;
+            int y = place[i][0];
+            for (int j = 0; j < 10; j++) {
+                if (game[y][j] != 1) {
+                    full = false;
+                }
+            }
+            if (full && !fullrows.contains(y)) {
+                fullrows.add(y);
+            }
+        }
+        return fullrows;
+    }
+    
+    /**
+     * if a row is full, this removes the whole row.
+     * @param fullrows arraylist of rows that are full
+     */
+    public void emptyFullRows(ArrayList<Integer> fullrows) {
+        fullrows.sort((a, b) -> a-b);
+        for (int i = 0; i < fullrows.size(); i++) {
+            int row = fullrows.get(i);
+            for (int j = 0; j < 10; j++) {
+                game[row][j] = 0;
+            }
+            moveEverythingDown(row);
+        }
+    }
+    
+    /**
+     * From the given row to top, this moves every piece one down.
+     * Used when a row in the middle has been erased.
+     * @param row erased row
+     */
+    public void moveEverythingDown(int row) {
+        for (int i = row; i>0; i--) {
+            for (int j = 0; j < 10; j++) {
+                game[i][j] = game[i-1][j];
+            }
+        }
+        for (int j = 0; j < 10; j++) {
+            game[0][j] = 0;
+        }
+    }
+    
+    
     
     /**
      * Checks if after some move there are values over one in the grid.
@@ -115,7 +172,6 @@ public class Tetris {
         }
         return true;  
     }
-    
     
     /**
      * Rotates the piece (shape) 90 degrees to the right.
@@ -144,10 +200,8 @@ public class Tetris {
             temp[i][0] = -currentShape.getShape()[i][1];
             temp[i][1] = currentShape.getShape()[i][0];
         }
-                
         currentShape.setShape(temp);
         updatePlace();
-        
         if (!validMove()) {
             rotateRight();
         }
@@ -163,11 +217,9 @@ public class Tetris {
                 max = place[i][1];
             }
         }
-        
         if (max < 9) {
             removePiece();
             side++;
-        
             updatePlace();
             if (!validMove()) {
                 moveLeft();
@@ -189,7 +241,6 @@ public class Tetris {
             removePiece();
             side--;
             updatePlace();
-        
             if (!validMove()) {
                 moveRight();
             }
@@ -203,23 +254,26 @@ public class Tetris {
         if (maxPlaceY() < 15) {
             removePiece();
             down++;
-        
             updatePlace();
-        
-            System.out.println(validMove());
             if (!validMove()) {
                 moveUp();
+                ArrayList<Integer> fullrows = lineScan();
+                if (!fullrows.isEmpty()) {
+                    emptyFullRows(fullrows);
+                }
+                createShape();
             }
         }
     }
 
+    /**
+     * If down was not valid, this cancels it.
+     */
     private void moveUp() {
         removePiece();
         down--;
         updatePlace();
     }
-
-    
     
     /**
      * Checks the max value of y in the board (cause it can't be more than 15),

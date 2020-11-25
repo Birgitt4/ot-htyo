@@ -5,6 +5,7 @@
  */
 package ohjelmistotekniikka.domain;
 
+import java.util.ArrayList;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -45,8 +46,6 @@ public class TetrisTest {
     public void tearDown() {
     }
 
-    // TODO add test methods here.
-    // The methods must be annotated with annotation @Test. For example:
     @Test
     public void createShapeChangesStartingShape() {
         game.createShape();
@@ -54,10 +53,8 @@ public class TetrisTest {
         
     }
     
-
-    
     @Test
-    public void MovingRightMovesEverythingOneToTheRight() {
+    public void movingRightMovesPieceOneToTheRight() {
         int[][] temp = new int[16][10];
         for (int i=0; i<16; i++) {
             for (int j=1; j<10; j++) {
@@ -69,7 +66,7 @@ public class TetrisTest {
         assertEquals(game.toString(), game2.toString());
     }
     @Test
-    public void MovingLeftMovesEverythingOneToTheLeft() {
+    public void movingLeftMovesPieceOneToTheLeft() {
         int[][] temp = new int[16][10];
         for (int i=0; i<16; i++) {
             for (int j=0; j<9; j++) {
@@ -81,7 +78,7 @@ public class TetrisTest {
         assertEquals(game.toString(), game2.toString());
     }
     @Test
-    public void MovingDownMovesEverythingOneToTheDown() {
+    public void movingDownMovesPieceOneToTheDown() {
         int[][] temp = new int[16][10];
         for (int i=1; i<16; i++) {
             for (int j=0; j<10; j++) {
@@ -90,6 +87,28 @@ public class TetrisTest {
         }
         game2.moveDown();
         game.setGame(temp);
+        assertEquals(game.toString(), game2.toString());
+    }
+    
+    @Test
+    public void clearRow() {
+        int[][] grid = new int[16][10];
+        int[][] grid2 = new int[16][10];
+        int[][] place = new int[][]{{14, 2}, {14, 3}, {15, 2}, {15, 3}};
+        game.setPlace(place);
+        for (int j = 0; j < 10; j++) {
+            if (j % 2 == 0) {
+                grid[14][j] = 1;
+                grid2[15][j] = 1;
+            }
+        }
+        for (int j = 0; j < 10; j++) {
+            grid[15][j] = 1;
+        }
+        game.setGame(grid);
+        game2.setGame(grid2);
+        ArrayList<Integer> fullrows = game.lineScan();
+        game.emptyFullRows(fullrows);
         assertEquals(game.toString(), game2.toString());
     }
 }
