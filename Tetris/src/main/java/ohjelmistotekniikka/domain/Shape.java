@@ -21,16 +21,13 @@ import static java.lang.Math.abs;
 public class Shape {
     
     private int[][] shape;
-    //private int[][] placeOnBoard;
-    private int down;
-    private int side;
+    private int[][] placeOnBoard;
+
     
     public Shape(int[][] shape) {
         this.shape = shape.clone();
-        //placeOnBoard = new int[4][2];
-        down = 0;
-        side = 4;
-        //updatePlace();
+        placeOnBoard = new int[4][2];
+
     }
     
     public int[][] getShape() {
@@ -39,9 +36,12 @@ public class Shape {
     public void setShape(int[][] shape) {
         this.shape = shape;
     }
-//    public int[][] getPlaceOnBoard() {
-//        return placeOnBoard;
-//    }
+    public int[][] getPlaceOnBoard() {
+        return placeOnBoard;
+    }
+    public void setPlaceOnBoard(int[][] place) {
+        this.placeOnBoard = place;
+    }
     
 //    /**
 //     * When moving or rotating the piece you have to update it on the gameboard

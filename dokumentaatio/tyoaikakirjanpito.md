@@ -8,4 +8,5 @@ Päivä | Tunnit | Mitä tehty?
 17.11. | 5 | Ohjelmassa toimii tetronomien kiertäminen ja liikuttaminen. Muutamia testejä tehty näille. Ohjelman pystyn suorittamaan ainakin ubuntulla ubuntulla!
 24.11. | 5 | Checkstyle kuntoon. Javadoc kommentoinnit. Opiskelua java FL:stä, vaatii vielä paljon lisää opiskelua.
 24.11. | 5 | Yritetty edistää ohjelmaa. Shape luokasta liikuttamis toiminnallisuudet Tetris luokkaan. Palat eivät siirry yli rajojen, mutta siirtyvät toisten palojen päälle. Tämän estäminen on osoittautunut yllättävän hankalaksi. Tämän hetkinen toteutus tekee siirron "feikki"laudalle ja sitten vertailee oliko sallittu. Tämä ei vielä toimi, koska taulukoiden viittaukset tuntuvat menevän clone() metodista huolimatta samaan paikkaan.
-yht. | 24| 
+25.11. | 2 | Tutkittu javaFX:n ominaisuuksia ja korjattu törmäysten havaitseminen, erittäin yksinkertaiseksi.
+yht. | 26| 
