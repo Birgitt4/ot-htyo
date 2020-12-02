@@ -5,6 +5,7 @@
  */
 package ohjelmistotekniikka.domain;
 
+import static java.lang.Math.abs;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -22,7 +23,9 @@ public class Tetris {
     private int[][] place;
     
     
-    
+    /**
+     * constructor, creates a Tetris object.
+     */
     public Tetris() {
         game = new int[16][10];
         currentShape = new Shape(new int[4][2]);
@@ -64,7 +67,27 @@ public class Tetris {
         side = 4;
         updatePlace();
         if (!validMove()) {
-            //game over ei saa enää paloja lisättyä.
+            putOnBoardWhatFits();
+            currentShape = null;
+        }
+    }
+    
+    /**
+     * When a whole tetromino does not fit, only put part what fits.
+     */
+    public void putOnBoardWhatFits() {
+        int miny = 4;
+        for (int i = 0; i < 4; i++) {
+            if (game[place[i][0]][place[i][1]] == 2) {
+                if (place[i][0] < miny) {
+                    miny = place[i][0];
+                }
+            }
+        }
+        for (int i = 0; i < 4; i++) {
+            if (place[i][0] >= miny) {
+                game[place[i][0]][place[i][1]]--;
+            }
         }
     }
 
@@ -107,7 +130,7 @@ public class Tetris {
      * @return array that tells rows that are full.
      */
     public ArrayList<Integer> lineScan() {
-        ArrayList<Integer> fullrows = new ArrayList<Integer>();
+        ArrayList<Integer> fullrows = new ArrayList<>();
         for (int i = 0; i < 4; i++) {
             boolean full = true;
             int y = place[i][0];
@@ -128,7 +151,7 @@ public class Tetris {
      * @param fullrows arraylist of rows that are full
      */
     public void emptyFullRows(ArrayList<Integer> fullrows) {
-        fullrows.sort((a, b) -> a-b);
+        fullrows.sort((a, b) -> a - b);
         for (int i = 0; i < fullrows.size(); i++) {
             int row = fullrows.get(i);
             for (int j = 0; j < 10; j++) {
@@ -144,9 +167,9 @@ public class Tetris {
      * @param row erased row
      */
     public void moveEverythingDown(int row) {
-        for (int i = row; i>0; i--) {
+        for (int i = row; i > 0; i--) {
             for (int j = 0; j < 10; j++) {
-                game[i][j] = game[i-1][j];
+                game[i][j] = game[i - 1][j];
             }
         }
         for (int j = 0; j < 10; j++) {
@@ -177,16 +200,24 @@ public class Tetris {
      * Rotates the piece (shape) 90 degrees to the right.
      */
     public void rotateRight() {
-        removePiece();
         int[][] temp = new int[4][2];
         for (int i = 0; i < 4; i++) {
             temp[i][0] = currentShape.getShape()[i][1];
             temp[i][1] = -currentShape.getShape()[i][0];
         }
-        currentShape.setShape(temp);
-        updatePlace();
-        if (!validMove()) {
+        if (validRotation(temp) == 1) {
+            moveLeft();
             rotateLeft();
+        } else if (validRotation(temp) == -1) {
+            moveRight();
+            rotateLeft();
+        } else {
+            removePiece();
+            currentShape.setShape(temp);
+            updatePlace();
+            if (!validMove()) {
+                rotateLeft();
+            }
         }
     }
     
@@ -194,17 +225,51 @@ public class Tetris {
      * Rotates the piece (shape) 90 degrees to the left.
      */
     public void rotateLeft() {
-        removePiece();
         int[][] temp = new int[4][2];
         for (int i = 0; i < 4; i++) {
             temp[i][0] = -currentShape.getShape()[i][1];
             temp[i][1] = currentShape.getShape()[i][0];
         }
-        currentShape.setShape(temp);
-        updatePlace();
-        if (!validMove()) {
-            rotateRight();
+        if (validRotation(temp) == 1) {
+            moveLeft();
+            rotateLeft();
+        } else if (validRotation(temp) == -1) {
+            moveRight();
+            rotateLeft();
+        } else {
+            removePiece();
+            currentShape.setShape(temp);
+            updatePlace();
+            if (!validMove()) {
+                rotateRight();
+            }
         }
+    }
+    
+    /**
+     * checks if a rotation would go over the edge.
+     * @param temp shape coordinates after rotation
+     * @return 0 if valid move, 1 if it goes over on the right side and
+     *  -1 on the left side.
+     */
+    public int validRotation(int[][] temp) {
+        int minX = 10;
+        int maxX = 10;
+        for (int i = 0; i < 4; i++) {
+            if (temp[i][1] < minX) {
+                minX = temp[i][1];
+            } else if (temp[i][1] > maxX) {
+                maxX = temp[i][1];
+            }
+        }
+        for (int i = 0; i < 4; i++) {
+            if ((temp[i][1] + abs(minX) + side) > 9) {
+                return 1;
+            } else if ((temp[i][1] + abs(minX) + side) < 0) {
+                return -1;
+            }
+        }
+        return 0;
     }
     
     /**
@@ -257,13 +322,23 @@ public class Tetris {
             updatePlace();
             if (!validMove()) {
                 moveUp();
-                ArrayList<Integer> fullrows = lineScan();
-                if (!fullrows.isEmpty()) {
-                    emptyFullRows(fullrows);
-                }
-                createShape();
+                afterLanding();
             }
+        } else {
+            afterLanding();
         }
+    }
+    
+    /**
+     * calls what is needed to check after a piece has landed. Then creates a
+     * new piece
+     */
+    public void afterLanding() {
+        ArrayList<Integer> fullrows = lineScan();
+        if (!fullrows.isEmpty()) {
+            emptyFullRows(fullrows);
+        }
+        createShape();
     }
 
     /**

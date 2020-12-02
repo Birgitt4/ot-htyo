@@ -23,7 +23,10 @@ public class Shape {
     private int[][] shape;
     private int[][] placeOnBoard;
 
-    
+    /**
+     * constructor creates Shape object.
+     * @param shape coordinates for the shape
+     */
     public Shape(int[][] shape) {
         this.shape = shape.clone();
         placeOnBoard = new int[4][2];

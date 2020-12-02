@@ -54,6 +54,23 @@ public class TetrisTest {
     }
     
     @Test
+    public void createShapeDoesNotCreateIfNoFit() {
+        int[][] grid = new int[16][10];
+        for (int i = 0; i < 16; i++) {
+            for (int j = 0; j < 10; j++) {
+                if (i == 0) {
+                    grid[i][j] = 0;
+                } else {
+                    grid[i][j] = 1;
+                }
+            }
+        }
+        game.setGame(grid);
+        game.createShape();
+        Shape current = game.getCurrentShape();
+        assertEquals(current, null);
+    }
+    @Test
     public void movingRightMovesPieceOneToTheRight() {
         int[][] temp = new int[16][10];
         for (int i=0; i<16; i++) {
@@ -91,6 +108,94 @@ public class TetrisTest {
     }
     
     @Test
+    public void movingOverLimitsDoesNotCauseException() {
+        boolean works = true;
+        try {
+            for (int i = 0; i < 12; i++) {
+                game2.moveRight();
+            }
+            for (int i = 0; i < 12; i++) {
+                game2.moveLeft();
+            }
+            for (int i = 0; i < 18; i++) {
+                game2.moveDown();
+            }
+        }
+        catch (Exception e) {
+            works = false;
+        }
+        assertTrue(works);
+    }
+    
+    @Test
+    public void rotateLeftDoNotCauseExceptionOnTheRight() {
+        boolean works = true;
+        try {
+            for (int i = 0; i < 10; i++) {
+                game2.moveRight();
+                game2.moveRight();
+                game2.rotateLeft();
+                game2.moveRight();
+                game2.rotateLeft();
+            }
+        }
+        catch (Exception e) {
+            works = false;
+        }
+        assertTrue(works);
+    }
+    @Test
+    public void rotateLeftDoNotCauseExceptionOnTheLeft() {
+        boolean works = true;
+        try {
+            for (int i = 0; i < 10; i++) {
+                game2.moveLeft();
+                game2.moveLeft();
+                game2.rotateLeft();
+                game2.moveLeft();
+                game2.rotateLeft();
+            }
+        }
+        catch (Exception e) {
+            works = false;
+        }
+        assertTrue(works);
+    }
+    @Test
+    public void rotateRightDoNotCauseExceptionOnTheRight() {
+        boolean works = true;
+        try {
+            for (int i = 0; i < 10; i++) {
+                game2.moveRight();
+                game2.moveRight();
+                game2.rotateRight();
+                game2.moveRight();
+                game2.rotateRight();
+            }
+        }
+        catch (Exception e) {
+            works = false;
+        }
+        assertTrue(works);
+    }
+    @Test
+    public void rotateRightDoNotCauseExceptionOnTheLeft() {
+        boolean works = true;
+        try {
+            for (int i = 0; i < 10; i++) {
+                game2.moveLeft();
+                game2.moveLeft();
+                game2.rotateRight();
+                game2.moveLeft();
+                game2.rotateRight();
+            }
+        }
+        catch (Exception e) {
+            works = false;
+        }
+        assertTrue(works);
+    }
+    @Test
     public void clearRow() {
         int[][] grid = new int[16][10];
         int[][] grid2 = new int[16][10];
@@ -111,4 +216,5 @@ public class TetrisTest {
         game.emptyFullRows(fullrows);
         assertEquals(game.toString(), game2.toString());
     }
+    
 }
