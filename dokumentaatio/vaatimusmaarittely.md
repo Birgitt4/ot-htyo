@@ -5,13 +5,13 @@ Legendaarinen Tetris tuo tylsien koti-iltojen pelastaja. Pelissä tetrominoista 
 ### Perustoiminallisuus
 #### Aloitus näkymässä:
 * Käyttäjä voi aloittaa normaalin pelin (Tehty)
-* Käyttäjä voi tarkastella omia pistetilastojaan
+* Käyttäjä voi tarkastella omia pistetilastojaan (Tehty)
 * Mahdolliset vaikeammat tasot?
 #### Pelissä:
 * Tetromino palikoita pystyy kiertämään ja liikuttamaan sivulta sivulle käyttäjän toimesta (Tehty, mahdollinen arrayindexoutofboundexception, joka tulee esiin pelin pysähtymisenä. Tällöin voi aloittaa uuden pelin. Itse ainakin saan välillä aikaiseksi, kun yrittää mennä yli sivuilta ja rämpyttää kirtonappeja. Metodeissa kyllä tarkistukset, mutta onko vain liian hidas ja tekee samanaikaisesti jotain?)
 * Palikat putoaa ylhäältä alas automaattisesti niin pitkälle kuin palikka pystyää putoamaan (Tehty)
 * Käyttäjä voi halutessaan nopeuttaa putoamista (Tehty)
-* Pelissä on pisteenlasku, joka näkyy käyttäjälle. (Pisteiden tuloperusteet!)
+* Pelissä on pisteenlasku, joka näkyy käyttäjälle. (Tehty)
 * Tetrominoja seitsemää erilaista, uusi palikka lähtee putoamaan aina, kun edellinen on pysähtynyt (Tehty)
 ### Mahdollisia lisäominaisuuksia peliin:
 * Tuhoutumattomat peliä vaikeuttavat palikat
