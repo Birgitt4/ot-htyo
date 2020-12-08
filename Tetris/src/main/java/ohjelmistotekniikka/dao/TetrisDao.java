@@ -19,11 +19,11 @@ public class TetrisDao implements Dao {
     
     public TetrisDao(String database) throws SQLException {
         this.database = database;
-        this.db = DriverManager.getConnection("jdbc:sqlite:" + database);
         initializeDatabase();
     }
     
     private void initializeDatabase() throws SQLException {
+        db = DriverManager.getConnection("jdbc:sqlite:" + database);
         Statement s = db.createStatement();
         s.execute("CREATE TABLE IF NOT EXISTS Points (id INTEGER PRIMARY KEY, name TEXT NOT NULL, points INTEGER)");
         db.close();
