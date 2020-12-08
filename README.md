@@ -7,6 +7,8 @@ Helsingin yliopiston syksyn 2020 ohjelmistotekniikka kurssin harjoitustyö. Oma 
 
 [Arkkitehtuurikuvaus](https://github.com/Birgitt4/ot-htyo/blob/master/dokumentaatio/arkkitehtuuri.md)
 
+[Käyttöohje](https://github.com/Birgitt4/ot-htyo/blob/master/dokumentaatio/kayttoohje.md)
+
 
 [Työaikakirjanpito](https://github.com/Birgitt4/ot-htyo/blob/master/dokumentaatio/tyoaikakirjanpito.md)
 
