@@ -6,7 +6,12 @@
 package ohjelmistotekniikka.ui;
 
 
+import java.io.FileInputStream;
+import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
@@ -19,11 +24,13 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Label;
 import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.CornerRadii;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
@@ -35,6 +42,7 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
+import ohjelmistotekniikka.dao.TetrisDao;
 import ohjelmistotekniikka.domain.Tetris;
 
 /**
@@ -48,7 +56,20 @@ public class TetrisUi extends Application {
     private int blockSize = 35;
     private Scene startScene;
     private Scene playScene;
-    private Tetris game = new Tetris();
+    private Tetris game;
+    private Text points;
+    private TetrisDao tetrisDao;
+    private Stage stage;
+    
+    @Override
+    public void init() throws Exception {
+        Properties properties = new Properties();
+        properties.load(new FileInputStream("config.properties"));
+        String database = properties.getProperty("database");
+        tetrisDao = new TetrisDao(database);
+        game = new Tetris(tetrisDao);
+    }
+    
     
     public Scene createStartingScene(Stage stage) {
         BorderPane startPane = new BorderPane();
@@ -101,11 +122,41 @@ public class TetrisUi extends Application {
         start.setOnMouseClicked((event) -> {
             stage.setScene(createPlayingScene());
         });
+        scores.setOnMouseClicked(event -> {
+            stage.setScene(createScoreScene());
+        });
         
         return startScene;
     }
     
-    
+    public Scene createScoreScene() {
+        Pane scorePane = new Pane();
+        scorePane.setPrefSize(16*blockSize, 10*blockSize + 200);
+        Label topTree = new Label("Top 3: ");
+        topTree.setTranslateX(100);
+        topTree.setTranslateY(100);
+        String top = "";
+        try {
+            top = game.getTopTree();
+        } catch (SQLException e) {
+            e.getMessage();
+        }
+        Label tops = new Label(top);
+        tops.setTranslateX(150);
+        tops.setTranslateY(100);
+        
+        Button back = new Button("Back");
+        back.setTranslateX(500);
+        back.setTranslateY(500);
+        
+        back.setOnMouseClicked(event -> {
+            stage.setScene(startScene);
+        });
+        
+        scorePane.getChildren().addAll(topTree, tops, back);
+        
+        return new Scene(scorePane);
+    }
     public void update(GraphicsContext gc) {
         int[][] grid = game.getGame();
         for (int i=0; i<10; i++) {
@@ -116,6 +167,46 @@ public class TetrisUi extends Application {
                 }
             }
         }
+    }
+    
+    public void gameOver() {
+        Stage saveScores = new Stage();
+        GridPane pane = new GridPane();
+        Scene scene = new Scene(pane);
+        
+        Label name = new Label("Name: ");
+        TextField nameField = new TextField();
+        Label pointsLabel = new Label("Points: ");
+        Label pointsLabel2 = new Label(Integer.toString(game.getPoints()));
+        Button cancel = new Button("cancel");
+        
+        Button ok = new Button("OK");
+        
+        pane.add(name, 0, 0);
+        pane.add(nameField, 1, 0);
+        pane.add(pointsLabel, 0, 1);
+        pane.add(pointsLabel2, 1, 1);
+        pane.add(ok, 0, 2);
+        pane.add(cancel, 1, 2);
+        
+        pane.setHgap(20);
+        pane.setVgap(20);
+        pane.setPadding(new Insets(20));
+        
+        cancel.setOnMouseClicked(event -> {
+            saveScores.close();
+        });
+        ok.setOnMouseClicked(event -> {
+            try {
+                game.savePoints(nameField.getText());
+                saveScores.close();
+            } catch (Exception e) {
+                e.getMessage();
+            }
+        });
+        
+        saveScores.setScene(scene);
+        saveScores.show();
     }
     
     public Scene createPlayingScene() {
@@ -173,6 +264,8 @@ public class TetrisUi extends Application {
                         gc.setFont(new Font(50));
                         gc.setTextBaseline(VPos.CENTER);
                         gc.fillText("GAME OVER", blockSize, 6*blockSize);
+                        gc.setFill(Color.RED);
+                        gameOver();
                         this.stop();
                     }
                     if (now-down >= 500000000) {
@@ -219,6 +312,7 @@ public class TetrisUi extends Application {
                         }
                         
                         lastUpdate = now;
+                        points.setText("Points: " + game.getPoints());
                     }
                 }
                 catch (Exception e) {
@@ -232,10 +326,11 @@ public class TetrisUi extends Application {
             
         };
         timer.start();
+        points = new Text();
+        points.setText("Points: " + game.getPoints());
+        points.setTranslateX(10*blockSize + 70);
+        points.setTranslateY(200);
         
-        
-        //jos lisään nappeja nuolinäppäinten toiminta ei enää toimi pelissä
-        //vaan alas ja ylös vaihtaa nappien välillä ja oikea ja vasen ei tee mitään
         Button pause = new Button("pause");
         pause.setTranslateX(10*blockSize + 75);
         pause.setTranslateY(50);
@@ -249,7 +344,7 @@ public class TetrisUi extends Application {
         again.setTranslateY(150);
         again.setFocusTraversable(false);
         
-        playPane.getChildren().addAll(cont, pause, again);
+        playPane.getChildren().addAll(cont, pause, again, points);
         pause.setOnMouseClicked(event -> {
             timer.stop();
         });
@@ -257,8 +352,7 @@ public class TetrisUi extends Application {
             timer.start();
         });
         again.setOnMouseClicked(event -> {
-            game = new Tetris();
-            gc.setFill(Color.RED);
+            game = new Tetris(tetrisDao);
             gc.clearRect(0,0,10*blockSize, 16*blockSize);
             game.createShape();
             timer.start();
@@ -270,11 +364,7 @@ public class TetrisUi extends Application {
     
     @Override
     public void start(Stage stage) {
-        
-
-        
-        
-        
+        this.stage = stage;
         stage.setScene(createStartingScene(stage));
         stage.setTitle("TETRIS");
         stage.show();

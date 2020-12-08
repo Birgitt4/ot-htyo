@@ -6,8 +6,10 @@
 package ohjelmistotekniikka.domain;
 
 import static java.lang.Math.abs;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Random;
+import ohjelmistotekniikka.dao.TetrisDao;
 
 /**
  * Takes care of the features in the game. Tetris.
@@ -21,12 +23,14 @@ public class Tetris {
     private int down;
     private int side;
     private int[][] place;
-    
+    private int points;
+    private TetrisDao tetrisDao;
     
     /**
      * constructor, creates a Tetris object.
      */
-    public Tetris() {
+    public Tetris(TetrisDao tetrisDao) {
+        this.tetrisDao = tetrisDao;
         game = new int[16][10];
         currentShape = new Shape(new int[4][2]);
         allShapes = new int[][][]{{{1, 1}, {1, 0}, {0, 0}, {-1, 0}},
@@ -37,7 +41,7 @@ public class Tetris {
                                   {{0, 0}, {0, 1}, {1, 1}, {1, 0}},
                                   {{0, -1}, {0, 0}, {1, 0}, {0, 1}}};
         rand = new Random();
-        
+        points = 0;
         down = 0;
         side = 4;
         place = new int[4][2];
@@ -48,6 +52,9 @@ public class Tetris {
     }
     public int[][] getGame() {
         return game;
+    }
+    public int getPoints() {
+        return points;
     }
     public void setPlace(int[][] place) {
         this.place = place;
@@ -159,6 +166,7 @@ public class Tetris {
             }
             moveEverythingDown(row);
         }
+        points += fullrows.size() * 100;
     }
     
     /**
@@ -338,6 +346,7 @@ public class Tetris {
         if (!fullrows.isEmpty()) {
             emptyFullRows(fullrows);
         }
+        points += 25;
         createShape();
     }
 
@@ -363,6 +372,19 @@ public class Tetris {
             }
         }
         return max;
+    }
+    
+    public void savePoints(String name) throws Exception {
+        tetrisDao.addPoints(name, points);
+    }
+    
+    public String getTopTree() throws SQLException {
+        ArrayList<String[]> results = tetrisDao.getTopTree();
+        String result = "";
+        for (int i = 0; i < results.size(); i++) {
+            result += results.get(i)[0] + ": " + results.get(i)[1] + "\n";
+        }
+        return result;
     }
     
     /**
