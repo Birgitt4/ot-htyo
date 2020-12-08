@@ -67,7 +67,8 @@ public class TetrisUi extends Application {
     private TetrisDao tetrisDao;
     private Stage stage;
     private AnimationTimer timer;
-    GraphicsContext gc;
+    private GraphicsContext gc;
+    private GridPane gameOver;
     
     @Override
     public void init() throws Exception {
@@ -196,37 +197,37 @@ public class TetrisUi extends Application {
         chart.setPrefSize(12*blockSize, 6*blockSize);
     }
     
-    public void gameOver() {
-        Stage saveScores = new Stage();
-        GridPane pane = new GridPane();
-        Scene scene = new Scene(pane);
+    public GridPane gameOver() {
+        gameOver = new GridPane();
+        gameOver.setVisible(false);
+        gameOver.setTranslateX(10*blockSize);
+        gameOver.setTranslateY(210);
         TextField nameField = new TextField();
-        Button cancel = new Button("Cancel");
         Button save = new Button("Save");
-        pane.add(new Label("Name: "), 0, 0);
-        pane.add(nameField, 1, 0);
-        pane.add(new Label("Points: "), 0, 1);
-        pane.add(new Label(Integer.toString(game.getPoints())), 1, 1);
-        pane.add(save, 0, 2);
-        pane.add(cancel, 1, 2);
-        pane.setHgap(20);
-        pane.setVgap(20);
-        pane.setPadding(new Insets(20));
-        cancel.setOnMouseClicked(event -> {
-            saveScores.close();
-        });
+        save.setFocusTraversable(false);
+        Label empty = new Label("Name cannot be empty");
+        empty.setVisible(false);
+        gameOver.add(new Label("Name: "), 0, 0);
+        gameOver.add(nameField, 1, 0);
+        gameOver.add(save, 0, 2);
+        gameOver.add(empty, 1, 2);
+        gameOver.setPadding(new Insets(5));
+        gameOver.setVgap(5);
+        gameOver.setHgap(5);
         save.setOnMouseClicked(event -> {
             if (nameField.getText().length() > 0) {
+                empty.setVisible(false);
                 try {
                     game.savePoints(nameField.getText());
-                    saveScores.close();
                 } catch (Exception e) {
                     e.getMessage();
                 }
+                gameOver.setVisible(false);
+            } else {
+                empty.setVisible(true);
             }
         });
-        saveScores.setScene(scene);
-        saveScores.show();
+        return gameOver;
     }
     
     public void createPlayingScene() {
@@ -256,8 +257,9 @@ public class TetrisUi extends Application {
         Button pause = buttonMaker("pause", 10*blockSize + 75, 50);
         Button cont = buttonMaker("continue", 10*blockSize + 75, 100);
         Button again = buttonMaker("again", 10*blockSize + 75, 150);
-        Button back = buttonMaker("back", 10*blockSize + 75, 300);
+        Button back = buttonMaker("back", 10*blockSize + 75, 14*blockSize);
         playPane.getChildren().addAll(cont, pause, again, back, points);
+        playPane.getChildren().add(gameOver());
         pause.setOnMouseClicked(event -> {
             timer.stop();
         });
@@ -267,11 +269,13 @@ public class TetrisUi extends Application {
         again.setOnMouseClicked(event -> {
             timer.stop();
             game.setToStart();
+            gameOver.setVisible(false);
             gc.clearRect(0,0,10*blockSize, 16*blockSize);
             actualGame();
         });
         back.setOnMouseClicked(event -> {
             game.setToStart();
+            gameOver.setVisible(false);
             gc.clearRect(0,0,10*blockSize, 16*blockSize);
             timer.stop();
             stage.setScene(startScene);
@@ -327,7 +331,7 @@ public class TetrisUi extends Application {
                         gc.setTextBaseline(VPos.CENTER);
                         gc.fillText("GAME OVER", blockSize, 6*blockSize);
                         gc.setFill(Color.RED);
-                        gameOver();
+                        gameOver.setVisible(true);
                         this.stop();
                     }
                     if (now-down >= 500000000) {

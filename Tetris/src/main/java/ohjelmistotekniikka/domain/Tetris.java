@@ -28,6 +28,7 @@ public class Tetris {
     
     /**
      * constructor, creates a Tetris object.
+     * @param tetrisDao memory
      */
     public Tetris(TetrisDao tetrisDao) {
         this.tetrisDao = tetrisDao;
@@ -68,6 +69,9 @@ public class Tetris {
     public Shape getCurrentShape() {
         return currentShape;
     }
+    /**
+     * Sets all values to what they have to be when starting a new game.
+     */
     public void setToStart() {
         game = new int[16][10];
         points = 0;
@@ -197,14 +201,12 @@ public class Tetris {
         }
     }
     
-    
-    
     /**
      * Checks if after some move there are values over one in the grid.
      * If there is there has to be more than one piece -> collision.
      * @return false if there is a collision, true if there isn't
      */
-    public boolean validMove() {
+    private boolean validMove() {
 
         for (int i = 0; i < 16; i++) {
             for (int j = 0; j < 10; j++) {
@@ -272,7 +274,7 @@ public class Tetris {
      * @return 0 if valid move, 1 if it goes over on the right side and
      *  -1 on the left side.
      */
-    public int validRotation(int[][] temp) {
+    private int validRotation(int[][] temp) {
         int minX = 10;
         int maxX = 10;
         for (int i = 0; i < 4; i++) {
@@ -353,7 +355,7 @@ public class Tetris {
      * calls what is needed to check after a piece has landed. Then creates a
      * new piece
      */
-    public void afterLanding() {
+    private void afterLanding() {
         ArrayList<Integer> fullrows = lineScan();
         if (!fullrows.isEmpty()) {
             emptyFullRows(fullrows);
@@ -362,7 +364,7 @@ public class Tetris {
         createShape();
     }
 
-    /**
+    /*
      * If down was not valid, this cancels it.
      */
     private void moveUp() {
@@ -371,12 +373,11 @@ public class Tetris {
         updatePlace();
     }
     
-    /**
-     * Checks the max value of y in the board (cause it can't be more than 15),
-     * so the piece does not go over board.
-     * @return max y where this shape is on the board.
-     */
-    public int maxPlaceY() {
+    /*
+    * Checks the max value of y in the board (cause it can't be more than 15),
+    * so the piece does not go over board.
+    */
+    private int maxPlaceY() {
         int max = 0;
         for (int i = 0; i < 4; i++) {
             if (max < place[i][0]) {
@@ -385,11 +386,19 @@ public class Tetris {
         }
         return max;
     }
-    
+    /**
+     * Saves current points and given name to memory.
+     * @param name player that got those points
+     * @throws Exception 
+     */
     public void savePoints(String name) throws Exception {
         tetrisDao.addPoints(name, points);
     }
-    
+    /**
+     * Gets tree best players from memory.
+     * @return String best: points \n second: points \n third:points
+     * @throws SQLException 
+     */
     public String getTopTree() throws SQLException {
         ArrayList<String[]> results = tetrisDao.getTopTree();
         String result = "";

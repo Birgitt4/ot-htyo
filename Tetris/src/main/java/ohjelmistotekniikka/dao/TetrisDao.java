@@ -9,8 +9,8 @@ import java.sql.*;
 import java.util.ArrayList;
 
 /**
- *
- * @author birgi
+ * Class for managing database.
+ * 
  */
 public class TetrisDao implements Dao {
     
