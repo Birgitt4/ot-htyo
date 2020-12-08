@@ -31,6 +31,12 @@ public class Tetris {
      */
     public Tetris(TetrisDao tetrisDao) {
         this.tetrisDao = tetrisDao;
+        init();
+    }
+    public Tetris() {
+        init();
+    }
+    public void init() {
         game = new int[16][10];
         currentShape = new Shape(new int[4][2]);
         allShapes = new int[][][]{{{1, 1}, {1, 0}, {0, 0}, {-1, 0}},
@@ -62,7 +68,13 @@ public class Tetris {
     public Shape getCurrentShape() {
         return currentShape;
     }
-
+    public void setToStart() {
+        game = new int[16][10];
+        points = 0;
+        down = 0;
+        side = 4;
+        place = new int[4][2];
+    }
     /**
      * Creates a new piece for tetris and puts it on the top of the gameboard.
      */

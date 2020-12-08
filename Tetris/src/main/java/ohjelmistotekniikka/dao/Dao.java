@@ -14,4 +14,5 @@ import java.util.ArrayList;
 public interface Dao {
     void addPoints(String name, int points) throws SQLException;
     ArrayList<String[]> getTopTree() throws SQLException;
+    ArrayList<Integer> getPointsFor(String name) throws SQLException;
 }

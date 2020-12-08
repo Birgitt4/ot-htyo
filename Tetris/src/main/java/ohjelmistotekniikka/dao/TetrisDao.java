@@ -47,4 +47,17 @@ public class TetrisDao implements Dao {
         
         return results;
     }
+
+    @Override
+    public ArrayList<Integer> getPointsFor(String name) throws SQLException {
+        ArrayList<Integer> results = new ArrayList<>();
+        PreparedStatement p = db.prepareStatement("SELECT points FROM Points WHERE name = ? ORDER BY points");
+        p.setString(1, name);
+        ResultSet r = p.executeQuery();
+        while (r.next()) {
+            results.add(r.getInt("points"));
+        }
+        return results;
+    }
+
 }
