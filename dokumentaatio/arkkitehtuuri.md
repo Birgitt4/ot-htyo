@@ -6,7 +6,7 @@ Kuvat eivät ole nyt ajantasalla lisättyäni tietokannan tällä viikolla (viik
 
 ![pakkaus](https://github.com/Birgitt4/ot-htyo/blob/master/dokumentaatio/pakkaukset.jpg)
 
-ohjelmistotekniikka.ui tulee sisältämään javaFX:llä toteutetun graafisen käyttöliittymän. Sovelluslogiikka on eriyttetynä pakkaukseen ohjelmistotekniikka.domain. Tiedon tallennukseen ei ole vielä toteuttuna mitään.
+ohjelmistotekniikka.ui sisältää javaFX:llä toteutetun graafisen käyttöliittymän. Sovelluslogiikka on eriyttetynä pakkaukseen ohjelmistotekniikka.domain. Tiedon tallennuksesta ja hakemisesta huolehditaan pakkauksessa ohjelmistotekniikka.dao.
 
 ### Käyttöliittymä
 
