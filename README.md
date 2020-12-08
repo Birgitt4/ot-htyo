@@ -14,7 +14,8 @@ Helsingin yliopiston syksyn 2020 ohjelmistotekniikka kurssin harjoitustyö. Oma 
 
 
 ## Releaset
-[Ensimmäinen release](https://github.com/Birgitt4/ot-htyo/releases/tag/viikko5)
+
+[Viikko 6](https://github.com/Birgitt4/ot-htyo/releases/tag/Viikko6)
 
 ## Komentorivitoiminnot
 ### Testaus
