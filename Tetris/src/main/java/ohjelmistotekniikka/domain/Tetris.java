@@ -32,12 +32,12 @@ public class Tetris {
      */
     public Tetris(TetrisDao tetrisDao) {
         this.tetrisDao = tetrisDao;
-        init();
+        format();
     }
     public Tetris() {
-        init();
+        format();
     }
-    public void init() {
+    public void format() {
         game = new int[16][10];
         currentShape = new Shape(new int[4][2]);
         allShapes = new int[][][]{{{1, 1}, {1, 0}, {0, 0}, {-1, 0}},
@@ -391,7 +391,7 @@ public class Tetris {
      * @param name player that got those points
      * @throws Exception 
      */
-    public void savePoints(String name) throws Exception {
+    public void savePoints(String name) throws SQLException {
         tetrisDao.addPoints(name, points);
     }
     /**

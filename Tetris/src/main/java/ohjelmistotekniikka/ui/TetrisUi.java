@@ -5,26 +5,19 @@
  */
 package ohjelmistotekniikka.ui;
 
-
 import java.io.FileInputStream;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.VPos;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.chart.BarChart;
-import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.ScatterChart;
 import javafx.scene.chart.XYChart;
@@ -32,12 +25,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -50,6 +39,7 @@ import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
 import ohjelmistotekniikka.dao.TetrisDao;
 import ohjelmistotekniikka.domain.Tetris;
+import ohjelmistotekniikka.domain.Shape;
 
 /**
  *
@@ -219,7 +209,7 @@ public class TetrisUi extends Application {
                 empty.setVisible(false);
                 try {
                     game.savePoints(nameField.getText());
-                } catch (Exception e) {
+                } catch (SQLException e) {
                     e.getMessage();
                 }
                 gameOver.setVisible(false);

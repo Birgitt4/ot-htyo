@@ -23,7 +23,9 @@ public class TetrisDao implements Dao {
     }
     
     private void initializeDatabase() throws SQLException {
-        db = DriverManager.getConnection("jdbc:sqlite:" + database);
+        if (db == null || db.isClosed()) {
+            db = DriverManager.getConnection("jdbc:sqlite:" + database);
+        }
         Statement s = db.createStatement();
         s.execute("CREATE TABLE IF NOT EXISTS Points (id INTEGER PRIMARY KEY, name TEXT NOT NULL, points INTEGER)");
         db.close();
@@ -31,7 +33,9 @@ public class TetrisDao implements Dao {
     
     @Override
     public void addPoints(String name, int points) throws SQLException {
-        db = DriverManager.getConnection("jdbc:sqlite:" + database);
+        if (db == null || db.isClosed()) {
+            db = DriverManager.getConnection("jdbc:sqlite:" + database);
+        }
         PreparedStatement p = db.prepareStatement("INSERT INTO Points (name,points) VALUES (?,?)");
         p.setString(1, name);
         p.setInt(2, points);
@@ -42,7 +46,9 @@ public class TetrisDao implements Dao {
 
     @Override
     public ArrayList<String[]> getTopTree() throws SQLException {
-        db = DriverManager.getConnection("jdbc:sqlite:" + database);
+        if (db == null || db.isClosed()) {
+            db = DriverManager.getConnection("jdbc:sqlite:" + database);
+        }
         ArrayList<String[]> results = new ArrayList<>();
         Statement s = db.createStatement();
         ResultSet r = s.executeQuery("SELECT name, points FROM Points ORDER BY points DESC LIMIT 3");
@@ -56,7 +62,9 @@ public class TetrisDao implements Dao {
 
     @Override
     public ArrayList<Integer> getPointsFor(String name) throws SQLException {
-        db = DriverManager.getConnection("jdbc:sqlite:" + database);
+        if (db == null || db.isClosed()) {
+            db = DriverManager.getConnection("jdbc:sqlite:" + database);
+        }
         ArrayList<Integer> results = new ArrayList<>();
         PreparedStatement p = db.prepareStatement("SELECT points FROM Points WHERE name = ? ORDER BY points");
         p.setString(1, name);
