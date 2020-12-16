@@ -15,4 +15,5 @@ Päivä | Tunnit | Mitä tehty?
 02.12. | 6 | Testausten edistäminen. Uusien checkstyle virheiden korjaaminen, sekä tappelu jarin generoimisen kanssa nyt, kun javaFX tuli käyttöön. Ohjelman pystyy ajamaan laitoksen koneilta (testattu virtuaalityöpöydässä), mutta windowsilla ei saa ajettua ubuntua käyttäen.
 07.12. | 8 | Pisteidenlasku sekä tietokannan liittoa osaksi ohjelmaan.
 08.12. | 9 | Muutama bugi tuli jälleen esille, sain korjattua. Javadoc pitäisi pystyä generoimaan. Highscore näkymää tehty, vähän ehkä hassu, mutta kelvatkoon. Viikon 6 vaatimukset pitäisi jokseenkin olla kunnossa. Ohjelman pystyy ajaa etätyöpöydällä käyttäen komentoa mvn compile exec...., mutta releasen jarin suorittaminen antaa ongelman SQLITE BUSY database is locked.?
+15.12. | 2 | Yritys selvitellä, mistä ylläoleva virheilmoitus johtui. Huomasin, että jarin suorittaminen toimii kyllä eri kansiossa, kuin virtuaalityöaseman downloads kansiossa! Näissä oikeudet taisi olla vain lukemiseen, jos oikein ymmärsin.
 yht. | 43.5| 
