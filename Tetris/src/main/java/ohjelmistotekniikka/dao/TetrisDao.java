@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package ohjelmistotekniikka.dao;
 
 import java.sql.*;
@@ -17,6 +13,11 @@ public class TetrisDao implements Dao {
     private Connection db;
     private String database;
     
+    /**
+     * constructor.
+     * @param database path and name of database used
+     * @throws SQLException 
+     */
     public TetrisDao(String database) throws SQLException {
         this.database = database;
         initializeDatabase();

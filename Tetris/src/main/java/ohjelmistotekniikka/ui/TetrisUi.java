@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package ohjelmistotekniikka.ui;
 
 import java.io.FileInputStream;
@@ -39,13 +35,11 @@ import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
 import ohjelmistotekniikka.dao.TetrisDao;
 import ohjelmistotekniikka.domain.Tetris;
-import ohjelmistotekniikka.domain.Shape;
 
 /**
  *
- * @author birgi
+ * GUI for Tetris
  */
-//extends Application import javafx.application.Application; ei toimi
 public class TetrisUi extends Application {
     
     private int fontSize = 72;
@@ -59,6 +53,7 @@ public class TetrisUi extends Application {
     private AnimationTimer timer;
     private GraphicsContext gc;
     private GridPane gameOver;
+    private boolean over;
     
     @Override
     public void init() throws Exception {
@@ -70,7 +65,7 @@ public class TetrisUi extends Application {
         createStartingScene();
         createPlayingScene();
     }
-    
+
     public TextFlow createHeadline() {
         TextFlow tetrisText = new TextFlow();
         tetrisText.setTextAlignment(TextAlignment.CENTER);
@@ -203,7 +198,7 @@ public class TetrisUi extends Application {
         gameOver.add(empty, 1, 2);
         gameOver.setPadding(new Insets(5));
         gameOver.setVgap(5);
-        gameOver.setHgap(5);
+        gameOver.setHgap(10);
         save.setOnMouseClicked(event -> {
             if (nameField.getText().length() > 0) {
                 empty.setVisible(false);
@@ -221,6 +216,7 @@ public class TetrisUi extends Application {
     }
     
     public void createPlayingScene() {
+        over = false;
         Pane playPane = new Pane();
         playPane.setMinSize(16*blockSize, (10*blockSize) +200);
         Line horline = new Line();
@@ -254,17 +250,19 @@ public class TetrisUi extends Application {
             timer.stop();
         });
         cont.setOnMouseClicked(event -> {
-            timer.start();
+            if (!over) {
+                timer.start();
+            }
         });
         again.setOnMouseClicked(event -> {
             timer.stop();
-            game.setToStart();
+            game = new Tetris(tetrisDao);
             gameOver.setVisible(false);
             gc.clearRect(0,0,10*blockSize, 16*blockSize);
             actualGame();
         });
         back.setOnMouseClicked(event -> {
-            game.setToStart();
+            game = new Tetris(tetrisDao);
             gameOver.setVisible(false);
             gc.clearRect(0,0,10*blockSize, 16*blockSize);
             timer.stop();
@@ -288,6 +286,7 @@ public class TetrisUi extends Application {
         }
     }    
     public void actualGame() {
+        over = false;
         HashMap<KeyCode, Boolean> pushed = new HashMap<>();
         playScene.setOnKeyPressed(event -> {
             pushed.put(event.getCode(), Boolean.TRUE);
@@ -316,20 +315,21 @@ public class TetrisUi extends Application {
             public void handle(long now) {
                 try {
                     if (game.getCurrentShape() == null) {
+                        this.stop();
+                        over = true;
                         gc.setFill(Color.BLACK);
                         gc.setFont(new Font(50));
-                        gc.setTextBaseline(VPos.CENTER);
                         gc.fillText("GAME OVER", blockSize, 6*blockSize);
                         gc.setFill(Color.RED);
                         gameOver.setVisible(true);
-                        this.stop();
+                        
                     }
                     if (now-down >= 500000000) {
-                        
                         game.moveDown();
                         gc.clearRect(0,0,10*blockSize, 16*blockSize);
                         update(gc);
                         down = now;
+                        lastUpdate = now;
                     }
                     if (now-lastUpdate >= 100000000) {
                         
@@ -374,9 +374,11 @@ public class TetrisUi extends Application {
                 }
                 catch (Exception e) {
                     this.stop();
-                    System.out.println("tässä tulee arrayindexexception, kun"
-                            + "samaa aikaa yrittää mennä sivuilta yli ja kiertää"
-                            + "palaa. :( Voi aloittaa uuden pelin sitten.");
+                    gc.setFill(Color.BLACK);
+                    gc.setFont(new Font(25));
+                    gc.setTextBaseline(VPos.CENTER);
+                    gc.fillText("Something went wrong.\nStart a new game.", blockSize, 6*blockSize);
+                    gc.setFill(Color.RED);
                 }
             }
         };

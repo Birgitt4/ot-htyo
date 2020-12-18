@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package ohjelmistotekniikka.domain;
 
 import static java.lang.Math.abs;
@@ -18,11 +14,9 @@ import ohjelmistotekniikka.dao.TetrisDao;
 public class Tetris {
     private int[][] game;
     private Shape currentShape;
-    private int[][][] allShapes;
     private Random rand;
     private int down;
     private int side;
-    private int[][] place;
     private int points;
     private TetrisDao tetrisDao;
     
@@ -32,120 +26,131 @@ public class Tetris {
      */
     public Tetris(TetrisDao tetrisDao) {
         this.tetrisDao = tetrisDao;
-        format();
+        initialize();
     }
+    /**
+     * constructor without tetrisdao.
+     */
     public Tetris() {
-        format();
+        initialize();
     }
-    public void format() {
+    /**
+     * common thing for both constructors.
+     */
+    public void initialize() {
         game = new int[16][10];
-        currentShape = new Shape(new int[4][2]);
-        allShapes = new int[][][]{{{1, 1}, {1, 0}, {0, 0}, {-1, 0}},
-                                  {{1, 0}, {0, 0}, {0, -1}, {-1, -1}},
-                                  {{1, -1}, {1, 0}, {0, 0}, {-1, 0}},
-                                  {{1, 0}, {0, 0}, {0, 1}, {-1, 1}},
-                                  {{1, 0}, {0, 0}, {-1, 0}, {-2, 0}},
-                                  {{0, 0}, {0, 1}, {1, 1}, {1, 0}},
-                                  {{0, -1}, {0, 0}, {1, 0}, {0, 1}}};
+        currentShape = new Shape(0);
         rand = new Random();
         points = 0;
         down = 0;
         side = 4;
-        place = new int[4][2];
     }
-    
     public void setGame(int[][] game) {
         this.game = game;
     }
     public int[][] getGame() {
         return game;
     }
+    public void setPoints(int points) {
+        this.points = points;
+    }
     public int getPoints() {
         return points;
     }
-    public void setPlace(int[][] place) {
-        this.place = place;
+    public void setCurrentShape(Shape shape) {
+        this.currentShape = shape;
     }
     public Shape getCurrentShape() {
         return currentShape;
     }
-    /**
-     * Sets all values to what they have to be when starting a new game.
-     */
-    public void setToStart() {
-        game = new int[16][10];
-        points = 0;
-        down = 0;
-        side = 4;
-        place = new int[4][2];
+    public void setDown(int down) {
+        this.down = down;
+    }
+    public void setSide(int side) {
+        this.side = side;
     }
     /**
      * Creates a new piece for tetris and puts it on the top of the gameboard.
      */
     public void createShape() {
         int rnd = rand.nextInt(7);
-        Shape next = new Shape(allShapes[rnd]);
+        Shape next = new Shape(rnd);
         currentShape = next;
         down = 0;
         side = 4;
-        updatePlace();
+        updatePlace(currentShape.getShape());
         if (!validMove()) {
             putOnBoardWhatFits();
             currentShape = null;
         }
     }
-    
     /**
      * When a whole tetromino does not fit, only put part what fits.
      */
     public void putOnBoardWhatFits() {
-        int miny = 4;
+        int maxy = 4;
+        int[][] place = currentShape.getPlaceOnBoard();
         for (int i = 0; i < 4; i++) {
             if (game[place[i][0]][place[i][1]] == 2) {
-                if (place[i][0] < miny) {
-                    miny = place[i][0];
+                if (place[i][0] < maxy) {
+                    maxy = place[i][0];
                 }
             }
         }
         for (int i = 0; i < 4; i++) {
-            if (place[i][0] >= miny) {
+            if (place[i][0] >= maxy) {
                 game[place[i][0]][place[i][1]]--;
             }
         }
     }
-
     /**
      * places tetris piece on the board.
      */
     public void putPiece() {
         for (int i = 0; i < 4; i++) {
-            game[place[i][0]][place[i][1]] += 1;
+            game[currentShape.getPlaceOnBoard()[i][0]][currentShape.getPlaceOnBoard()[i][1]] += 1;
         }
     }
-    
     /**
      * removes a piece from the board.
      */
     public void removePiece() {
         for (int i = 0; i < 4; i++) {
-            game[place[i][0]][place[i][1]] -= 1;
+            game[currentShape.getPlaceOnBoard()[i][0]][currentShape.getPlaceOnBoard()[i][1]] -= 1;
         }
     }
-    
     /**
      * When moving or rotating the piece you have to update it on the gameboard
      * also, this does that to the board.
+     * @param temp tells coordinates for tetrominos shape
      */
-    public void updatePlace() {
-        place = new int[4][2];
+    public void updatePlace(int[][] temp) {
+        int[][] place = new int[4][2];
         for (int i = 0; i < 4; i++) {
-            int y = currentShape.getShape()[i][0] + currentShape.minY() + down;
-            int x = currentShape.getShape()[i][1] + currentShape.minX() + side;
+            int y = temp[i][0] + minY(temp) + down;
+            int x = temp[i][1] + minX(temp) + side;
             place[i][0] = y;
             place[i][1] = x;
         }
+        if (!inArray(place)) {
+            putPiece();
+            return;
+        }
+        currentShape.setShape(temp);
         currentShape.setPlaceOnBoard(place);
         putPiece();
+    }
+    
+    private boolean inArray(int[][] place) {
+        for (int i = 0; i < place.length; i++) {
+            if (place[i][0] > 15 || place[i][0] < 0) {
+                return false;
+            }
+            if (place[i][1] > 9 || place[i][1] < 0) {
+                return false;
+            }
+        }
+        return true;
     }
     
     /**
@@ -156,7 +161,7 @@ public class Tetris {
         ArrayList<Integer> fullrows = new ArrayList<>();
         for (int i = 0; i < 4; i++) {
             boolean full = true;
-            int y = place[i][0];
+            int y = currentShape.getPlaceOnBoard()[i][0];
             for (int j = 0; j < 10; j++) {
                 if (game[y][j] != 1) {
                     full = false;
@@ -168,7 +173,6 @@ public class Tetris {
         }
         return fullrows;
     }
-    
     /**
      * if a row is full, this removes the whole row.
      * @param fullrows arraylist of rows that are full
@@ -184,7 +188,6 @@ public class Tetris {
         }
         points += fullrows.size() * 100;
     }
-    
     /**
      * From the given row to top, this moves every piece one down.
      * Used when a row in the middle has been erased.
@@ -200,45 +203,43 @@ public class Tetris {
             game[0][j] = 0;
         }
     }
-    
     /**
      * Checks if after some move there are values over one in the grid.
      * If there is there has to be more than one piece -> collision.
      * @return false if there is a collision, true if there isn't
      */
-    private boolean validMove() {
-
+    public boolean validMove() {
         for (int i = 0; i < 16; i++) {
             for (int j = 0; j < 10; j++) {
-                if (game[i][j] > 1) {
+                if (game[i][j] != 1 && game[i][j] != 0) {
                     return false;
                 }
             }
         }
         return true;  
     }
-    
     /**
      * Rotates the piece (shape) 90 degrees to the right.
      */
     public void rotateRight() {
-        int[][] temp = new int[4][2];
-        for (int i = 0; i < 4; i++) {
-            temp[i][0] = currentShape.getShape()[i][1];
-            temp[i][1] = -currentShape.getShape()[i][0];
-        }
-        if (validRotation(temp) == 1) {
-            moveLeft();
-            rotateLeft();
-        } else if (validRotation(temp) == -1) {
-            moveRight();
-            rotateLeft();
-        } else {
-            removePiece();
-            currentShape.setShape(temp);
-            updatePlace();
-            if (!validMove()) {
-                rotateLeft();
+        if (currentShape != null) {
+            int[][] temp = new int[4][2];
+            for (int i = 0; i < 4; i++) {
+                temp[i][0] = currentShape.getShape()[i][1];
+                temp[i][1] = -currentShape.getShape()[i][0];
+            }
+            if (validRotation(temp) == 1) {
+                moveLeft();
+                rotateRight();
+            } else if (validRotation(temp) == -1) {
+                moveRight();
+                rotateRight();
+            } else {
+                removePiece();
+                updatePlace(temp);
+                if (!validMove()) {
+                    rotateLeft();
+                }
             }
         }
     }
@@ -247,27 +248,27 @@ public class Tetris {
      * Rotates the piece (shape) 90 degrees to the left.
      */
     public void rotateLeft() {
-        int[][] temp = new int[4][2];
-        for (int i = 0; i < 4; i++) {
-            temp[i][0] = -currentShape.getShape()[i][1];
-            temp[i][1] = currentShape.getShape()[i][0];
-        }
-        if (validRotation(temp) == 1) {
-            moveLeft();
-            rotateLeft();
-        } else if (validRotation(temp) == -1) {
-            moveRight();
-            rotateLeft();
-        } else {
-            removePiece();
-            currentShape.setShape(temp);
-            updatePlace();
-            if (!validMove()) {
-                rotateRight();
+        if (currentShape != null) {
+            int[][] temp = new int[4][2];
+            for (int i = 0; i < 4; i++) {
+                temp[i][0] = -currentShape.getShape()[i][1];
+                temp[i][1] = currentShape.getShape()[i][0];
+            }
+            if (validRotation(temp) == 1) {
+                moveLeft();
+                rotateLeft();
+            } else if (validRotation(temp) == -1) {
+                moveRight();
+                rotateLeft();
+            } else {
+                removePiece();
+                updatePlace(temp);
+                if (!validMove()) {
+                    rotateRight();
+                }
             }
         }
     }
-    
     /**
      * checks if a rotation would go over the edge.
      * @param temp shape coordinates after rotation
@@ -275,61 +276,61 @@ public class Tetris {
      *  -1 on the left side.
      */
     private int validRotation(int[][] temp) {
-        int minX = 10;
-        int maxX = 10;
+        int minX = minX(temp);
+        int maxX = 0;
         for (int i = 0; i < 4; i++) {
-            if (temp[i][1] < minX) {
-                minX = temp[i][1];
-            } else if (temp[i][1] > maxX) {
+            if (temp[i][1] > maxX) {
                 maxX = temp[i][1];
             }
         }
         for (int i = 0; i < 4; i++) {
-            if ((temp[i][1] + abs(minX) + side) > 9) {
+            if ((temp[i][1] + maxX + side) > 9) {
                 return 1;
-            } else if ((temp[i][1] + abs(minX) + side) < 0) {
+            } else if ((temp[i][1] + minX + side) < 0) {
                 return -1;
             }
         }
         return 0;
     }
-    
     /**
      * Moves the piece (shape) one to the right on the gameboard.
      */
     public void moveRight() {
-        int max = 0;
-        for (int i = 0; i < 4; i++) {
-            if (max < place[i][1]) {
-                max = place[i][1];
+        if (currentShape != null) {
+            int max = 0;
+            for (int i = 0; i < 4; i++) {
+                if (max < currentShape.getPlaceOnBoard()[i][1]) {
+                    max = currentShape.getPlaceOnBoard()[i][1];
+                }
             }
-        }
-        if (max < 9) {
-            removePiece();
-            side++;
-            updatePlace();
-            if (!validMove()) {
-                moveLeft();
+            if (max < 9) {
+                removePiece();
+                side++;
+                updatePlace(currentShape.getShape());
+                if (!validMove()) {
+                    moveLeft();
+                }
             }
         }
     }
-    
     /**
      * Moves the piece (shape) one to the left on the gameboard.
      */
     public void moveLeft() {
-        int min = 10;
-        for (int i = 0; i < 4; i++) {
-            if (min > place[i][1]) {
-                min = place[i][1];
+        if (currentShape != null) {
+            int min = 10;
+            for (int i = 0; i < 4; i++) {
+                if (min > currentShape.getPlaceOnBoard()[i][1]) {
+                    min = currentShape.getPlaceOnBoard()[i][1];
+                }
             }
-        }
-        if (min > 0) {
-            removePiece();
-            side--;
-            updatePlace();
-            if (!validMove()) {
-                moveRight();
+            if (min > 0) {
+                removePiece();
+                side--;
+                updatePlace(currentShape.getShape());
+                if (!validMove()) {
+                    moveRight();
+                }
             }
         }
     }
@@ -338,19 +339,20 @@ public class Tetris {
      * Moves the piece (shape) one to the down on the gameboard.
      */
     public void moveDown() {
-        if (maxPlaceY() < 15) {
-            removePiece();
-            down++;
-            updatePlace();
-            if (!validMove()) {
-                moveUp();
+        if (currentShape != null) {
+            if (maxPlaceY() < 15) {
+                removePiece();
+                down++;
+                updatePlace(currentShape.getShape());
+                if (!validMove()) {
+                    moveUp();
+                    afterLanding();
+                }
+            } else {
                 afterLanding();
             }
-        } else {
-            afterLanding();
         }
     }
-    
     /**
      * calls what is needed to check after a piece has landed. Then creates a
      * new piece
@@ -370,9 +372,27 @@ public class Tetris {
     private void moveUp() {
         removePiece();
         down--;
-        updatePlace();
+        updatePlace(currentShape.getShape());
     }
-    
+    private int minY(int[][] temp) {
+        int min = 16;
+        for (int i = 0; i < 4; i++) {
+            if (min > temp[i][0]) {
+                min = temp[i][0];
+            }
+        }
+        return abs(min);
+    }
+
+    private int minX(int[][] temp) {
+        int min = 10;
+        for (int i = 0; i < 4; i++) {
+            if (min > temp[i][1]) {
+                min = temp[i][1];
+            }
+        }
+        return abs(min);
+    }
     /*
     * Checks the max value of y in the board (cause it can't be more than 15),
     * so the piece does not go over board.
@@ -380,8 +400,8 @@ public class Tetris {
     private int maxPlaceY() {
         int max = 0;
         for (int i = 0; i < 4; i++) {
-            if (max < place[i][0]) {
-                max = place[i][0];
+            if (max < currentShape.getPlaceOnBoard()[i][0]) {
+                max = currentShape.getPlaceOnBoard()[i][0];
             }
         }
         return max;
@@ -389,7 +409,7 @@ public class Tetris {
     /**
      * Saves current points and given name to memory.
      * @param name player that got those points
-     * @throws Exception 
+     * @throws SQLException 
      */
     public void savePoints(String name) throws SQLException {
         tetrisDao.addPoints(name, points);
@@ -406,19 +426,5 @@ public class Tetris {
             result += results.get(i)[0] + ": " + results.get(i)[1] + "\n";
         }
         return result;
-    }
-    
-    /**
-     * used for testing.
-     * @return gameboard as a string.
-     */
-    public String toString() {
-        String board = "";
-        for (int i = 0; i < 16; i++) {
-            for (int j = 0; j < 10; j++) {
-                board += game[i][j] + ",";
-            }
-        }
-        return board;
     }
 }
