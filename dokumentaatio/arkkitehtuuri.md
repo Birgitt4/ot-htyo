@@ -33,7 +33,7 @@ Tietokanta on SQL tietokanta, joka sisältää ainoastaan yhden tietokantataulun
 
 #### Pelin kulku ilman käyttäjältä tulevia käskyjä
 Kun käyttäjä painaa aloitusnäkymässä nappia start, peli lähtee heti käyntiin. Aluksi luodaan pelialusta eli Tetris luokan olio, joka luo uuden Shape olion ensimmäiseksi tetrominoksi. Tämän jälkeen tarkistetaan, että meillä on tetromino pelissä, jos metodi getCurrentShape palauttaa arvon null, niin peli pysäytetään. Muuten tietyin väliajoin tetromino putoaa yhden askeleen automaattisesti alaspäin. Tetris luokan moveDown metodi huolehtii uusien tetrominojen luomisista ja rivien tyhjentämisistä aina, kun edellinen tetromino ei voinut enää mennä alaspäin.
-![alas](https://github.com/Birgitt4/ot-htyo/blob/master/dokumentaatio/Pelinperustoiminnallisuus2.jpg)
+![alas](https://github.com/Birgitt4/ot-htyo/blob/master/dokumentaatio/kuvat/Pelinperustoiminnallisuus2.jpg)
 
 #### Pisteiden tallennus
 Kun peli loppuu, käyttäjä pystyy valita tallennetaanko tulos muistiin vai ei. Jos käyttäjä päättää tallentaa tuloksen, hänen tulee antaa tulokselle nimimerkki. Tämän jälkeen nimimerkki ja tulos annetaan parametrina Tetris luokan metodille savePoints, joka tallentaa tuloksen TetrisDaon kautta pelin taustalla olevaan tietokantaan.
