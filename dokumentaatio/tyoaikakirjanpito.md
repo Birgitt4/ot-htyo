@@ -16,4 +16,8 @@ Päivä | Tunnit | Mitä tehty?
 07.12. | 8 | Pisteidenlasku sekä tietokannan liittoa osaksi ohjelmaan.
 08.12. | 9 | Muutama bugi tuli jälleen esille, sain korjattua. Javadoc pitäisi pystyä generoimaan. Highscore näkymää tehty, vähän ehkä hassu, mutta kelvatkoon. Viikon 6 vaatimukset pitäisi jokseenkin olla kunnossa. Ohjelman pystyy ajaa etätyöpöydällä käyttäen komentoa mvn compile exec...., mutta releasen jarin suorittaminen antaa ongelman SQLITE BUSY database is locked.?
 15.12. | 2 | Yritys selvitellä, mistä ylläoleva virheilmoitus johtui. Huomasin, että jarin suorittaminen toimii kyllä eri kansiossa, kuin virtuaalityöaseman downloads kansiossa! Näissä oikeudet taisi olla vain lukemiseen, jos oikein ymmärsin.
-yht. | 43.5| 
+17.12. | 5 | Testauksien edistämistä ja virheisiin varautumista.
+18.12. | 3 | Ahaa elämyksiä tietokannan käytöstä ja nyt on varauduttu tilanteisiin, jossa ei löydy config tiedostoa tai jokin virhe tapahtuu tietokanta yhteyksissä.
+19.12. | 2 | Lopullinen palautus.
+
+yht. | 72,5| 
