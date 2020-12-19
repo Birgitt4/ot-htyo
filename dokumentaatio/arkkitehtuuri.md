@@ -1,12 +1,8 @@
 # Arkkitehtuurikuvaus
 
-Kuvat eivät ole nyt ajantasalla lisättyäni tietokannan tällä viikolla (viikko 6)!
-
 ### Rakenne
 
-![pakkaus](https://github.com/Birgitt4/ot-htyo/blob/master/dokumentaatio/pakkaukset.jpg)
-
-ohjelmistotekniikka.ui sisältää javaFX:llä toteutetun graafisen käyttöliittymän. Sovelluslogiikka on eriyttetynä pakkaukseen ohjelmistotekniikka.domain. Tiedon tallennuksesta ja hakemisesta huolehditaan pakkauksessa ohjelmistotekniikka.dao.
+Pakkaus ohjelmistotekniikka.ui sisältää javaFX:llä toteutetun graafisen käyttöliittymän. Sovelluslogiikka on eriyttetynä pakkaukseen ohjelmistotekniikka.domain. Tiedon tallennuksesta ja hakemisesta huolehditaan pakkauksessa ohjelmistotekniikka.dao.
 
 ### Käyttöliittymä
 
@@ -20,15 +16,18 @@ Sovelluslogiikasta vastaa luokat [Tetris](https://github.com/Birgitt4/ot-htyo/bl
 
 Shape luokka kuvaa yhtä tetromino palaa. Pala on ilmoitettu (x,y) koordinaatteina, mikä mahdollistaa muodon mallinnuksen kaksiuloitteiseen taulukkoon Tetris luokkaan.
 
-Tetris taas vastaa pelin toiminnasta eli esim. palojen kiertämisestä, liikuttamisesta ja rivien tyhjentämisestä, kun kokonainen rivi ollaan saatu täytettyä. Itse peli on vain kaksiuloitteinen taulukko, jossa tyhjissä ruuduissa on 0 ja ruuduissa, jossa on jonkin tetrominon pala, on numero 1.
+Tetris taas vastaa pelin toiminnasta eli esim. palojen kiertämisestä, liikuttamisesta ja rivien tyhjentämisestä, kun kokonainen rivi ollaan saatu täytettyä. Itse peli on vain kaksiuloitteinen taulukko, jossa tyhjissä ruuduissa on 0, ja ruuduissa, jossa on jonkin tetrominon pala, on numero 1.
 
-![luokat](https://github.com/Birgitt4/ot-htyo/blob/master/dokumentaatio/luokat.jpg)
+![kuva](https://github.com/Birgitt4/ot-htyo/blob/master/dokumentaatio/kuvat/luokat.jpg)
+
+Tetrikselle injektoidaan konstruktorin yhteydessä TetrisDao, joka toteuttaa dao rajapinnan, mikä huolehtii tietojen tallennuksista.
 
 ### Tietojen pysyväistallennus
 
-Pakkauksesta ohjelmistotekniikka.dao löytyy Dao rajapinta ja TetrisDao, joka toteuttaa Dao rajapinnan. Pelissä tallennamme tietoa pelituloksista. Pelin loppuessa näytölle ponnahtaa ikkuna, jossa käyttäjä voi antaa oman nimimerkin ja tallentaa pelin tuloksen tietokantaan. Aloitussivulta napista "Highscores" pääsee tarkastelemaan kaikkien aikojen top pelaajien tuloksia, sekä käyttäjä pystyy myös hakemaan tietyllä nimimerkillä pelattuja pelejä.
+Pakkauksesta ohjelmistotekniikka.dao löytyy Dao rajapinta ja TetrisDao, joka toteuttaa Dao rajapinnan. Pelissä tallennamme tietoa pelituloksista. Pelin loppuessa käyttäjä voi antaa oman nimimerkin ja tallentaa pelin tuloksen tietokantaan. Aloitussivulta napista "Highscores" pääsee tarkastelemaan kaikkien aikojen top pelaajien tuloksia, sekä käyttäjä pystyy myös hakemaan tietyllä nimimerkillä pelattuja pelejä.
 
 Tietokanta on SQL tietokanta, joka sisältää ainoastaan yhden tietokantataulun. Tietokannan nimi löytyy sovelluksen juuren config.properties tiedostosta.
+
 
 ### Perustoiminnallisuuksista
 
@@ -39,10 +38,5 @@ Kun käyttäjä painaa aloitusnäkymässä nappia start, peli lähtee heti käyn
 #### Pisteiden tallennus
 Kun peli loppuu, käyttäjä pystyy valita tallennetaanko tulos muistiin vai ei. Jos käyttäjä päättää tallentaa tuloksen, hänen tulee antaa tulokselle nimimerkki. Tämän jälkeen nimimerkki ja tulos annetaan parametrina Tetris luokan metodille savePoints, joka tallentaa tuloksen TetrisDaon kautta pelin taustalla olevaan tietokantaan.
 
-(Tähän vielä sekvenssikaavio)
-
-### Ohjelmaan jääneet heikkoudet
-
-Käyttöliittymä!
 
 
