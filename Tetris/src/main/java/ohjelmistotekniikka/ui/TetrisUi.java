@@ -2,10 +2,13 @@
 package ohjelmistotekniikka.ui;
 
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.geometry.Insets;
@@ -54,14 +57,39 @@ public class TetrisUi extends Application {
     private GraphicsContext gc;
     private GridPane gameOver;
     private boolean over;
+    private Text errorMessage;
+    private boolean error;
     
     @Override
-    public void init() throws Exception {
+    public void init() {
+        errorMessage = new Text("");
+        error = false;
         Properties properties = new Properties();
-        properties.load(new FileInputStream("config.properties"));
-        String database = properties.getProperty("database");
-        tetrisDao = new TetrisDao(database);
-        game = new Tetris(tetrisDao);
+        try {
+            properties.load(new FileInputStream("config.properties"));
+        } catch (Exception e) {
+            error = true;
+            errorMessage.setText("Sovelluksen juuresta ei löydy tiedostoa config.properties.\n"
+                    + "Pisteiden tallentaminen pois käytöstä.");
+        }
+        if (!error) {
+            String database = properties.getProperty("database");
+            try {
+                tetrisDao = new TetrisDao(database);
+            } catch (SQLException e) {
+                errorMessage.setText("Onko tiedostoihin luku ja kirjoitusoikeudet?\n"
+                        + "Jokin meni vikaan tietokannan kanssa. Voit pelata,\n"
+                        + "mutta pisteiden tallentaminen on poissa käytöstä.");
+                error = true;
+            }
+            if (!error) {
+                game = new Tetris(tetrisDao);
+            }
+            
+        }
+        if (error) {
+            game = new Tetris();
+        }
         createStartingScene();
         createPlayingScene();
     }
@@ -112,7 +140,12 @@ public class TetrisUi extends Application {
         scores.setMinSize(80, 60);
         
         vbox.setAlignment(Pos.CENTER);
-        vbox.getChildren().addAll(createHeadline(), start, scores);
+        vbox.getChildren().addAll(createHeadline(), start);
+        if (!error) {
+            vbox.getChildren().add(scores);
+        } else {
+            vbox.getChildren().add(errorMessage);
+        }
         startPane.setCenter(vbox);
         startScene = new Scene(startPane);
 
@@ -120,7 +153,9 @@ public class TetrisUi extends Application {
             toPlayScene();
         });
         scores.setOnMouseClicked(event -> {
-            stage.setScene(createScoreScene());
+            if (!error) {
+                stage.setScene(createScoreScene());
+            }
         });
 
     }
@@ -321,8 +356,9 @@ public class TetrisUi extends Application {
                         gc.setFont(new Font(50));
                         gc.fillText("GAME OVER", blockSize, 6*blockSize);
                         gc.setFill(Color.RED);
-                        gameOver.setVisible(true);
-                        
+                        if (!error) {
+                            gameOver.setVisible(true);
+                        }
                     }
                     if (now-down >= 500000000) {
                         game.moveDown();
